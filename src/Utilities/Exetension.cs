@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Followme.AspNet.Core.FastCommon.Infrastructure;
 
 namespace Atlantis
 {
@@ -139,15 +138,6 @@ namespace Atlantis
                 dateTime = defaultTime.HasValue ? defaultTime.Value:DateTime.MinValue;
             }
             return dateTime;
-        }
-        
-        public static int ToStatus(this ResultCode code)
-        {
-            switch(code)
-            {
-                case ResultCode.Success:return 0;
-                default:return 4; 
-            }
         }
 
         public static string ToValOrDefault(this string value,string defaultValue)
