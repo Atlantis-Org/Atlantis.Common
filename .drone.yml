@@ -4,4 +4,3 @@ pipeline:
     commands:
       - cd src
       - dotnet build
-      - echo hello
