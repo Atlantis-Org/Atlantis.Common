@@ -1,9 +1,0 @@
-/Users/wanbin/Documents/project/dotnet/github.com/Kernel-Atlantis/Atlantis.Common/src/obj/Debug/netstandard2.0/Atlantis.Common.csprojAssemblyReference.cache
-/Users/wanbin/Documents/project/dotnet/github.com/Kernel-Atlantis/Atlantis.Common/src/obj/Debug/netstandard2.0/Atlantis.Common.csproj.CoreCompileInputs.cache
-/Users/wanbin/Documents/project/dotnet/github.com/Kernel-Atlantis/Atlantis.Common/src/obj/Debug/netstandard2.0/Atlantis.Common.AssemblyInfoInputs.cache
-/Users/wanbin/Documents/project/dotnet/github.com/Kernel-Atlantis/Atlantis.Common/src/obj/Debug/netstandard2.0/Atlantis.Common.AssemblyInfo.cs
-/Users/wanbin/Documents/project/dotnet/github.com/Kernel-Atlantis/Atlantis.Common/src/bin/Debug/netstandard2.0/Atlantis.Common.deps.json
-/Users/wanbin/Documents/project/dotnet/github.com/Kernel-Atlantis/Atlantis.Common/src/bin/Debug/netstandard2.0/Atlantis.Common.dll
-/Users/wanbin/Documents/project/dotnet/github.com/Kernel-Atlantis/Atlantis.Common/src/bin/Debug/netstandard2.0/Atlantis.Common.pdb
-/Users/wanbin/Documents/project/dotnet/github.com/Kernel-Atlantis/Atlantis.Common/src/obj/Debug/netstandard2.0/Atlantis.Common.dll
-/Users/wanbin/Documents/project/dotnet/github.com/Kernel-Atlantis/Atlantis.Common/src/obj/Debug/netstandard2.0/Atlantis.Common.pdb
