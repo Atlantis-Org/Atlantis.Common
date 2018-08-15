@@ -11,18 +11,20 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;
+using Atlantis.Common.CodeGeneration.Descripters;
 
 namespace Atlantis.Common.CodeGeneration
 {
     public class CodeBuilder
     {
         private static readonly CodeBuilder _instance = new CodeBuilder();
-        private readonly IList<CodeClass> _classes = new List<CodeClass>();
+        private readonly List<ClassDescripter> _classes = new List<ClassDescripter>();
         private readonly IList<string> _assemblyRefenceDLLs = new List<string>();
         private readonly IList<string> _refences = new List<string>();
         private string _defaultNamespaces = "";
 
         private const string FileName = "FastCommonGeneration";
+        public const string DefaultNamespace = "Atlantis.Common.CodeGeneration";
 
         private CodeBuilder()
         {
@@ -32,11 +34,10 @@ namespace Atlantis.Common.CodeGeneration
 
         public static CodeBuilder Instance => _instance;
 
-        public CodeClass CreateClass(string className, string[] bastTypes = null, string namespaces = null)
+        public CodeBuilder CreateClass(params ClassDescripter[] classes)
         {
-            var codeClass = new CodeClass(className, namespaces ?? _defaultNamespaces, this, bastTypes);
-            _classes.Add(codeClass);
-            return codeClass;
+            _classes.AddRange(classes);
+            return this;
         }
 
         public CodeBuilder AddAssemblyRefence(params string[] refenceAssemblyNamesOrFiles)
@@ -63,18 +64,43 @@ namespace Atlantis.Common.CodeGeneration
 
         public CodeAssembly Build()
         {
+            var strCode = BuildCode();
+            var codePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/" + FileName + ".cs";
+            var dllPath = Path.Combine(Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location),$"{FileName}.dll");
+            var pdbPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"{FileName}.pdb");
+
+            if (IsReCompile(codePath, dllPath, strCode))
+            {
+                Compile(codePath, dllPath, pdbPath, strCode);
+            }
+
+            return new CodeAssembly(Assembly.LoadFile(dllPath));
+        }
+
+        private string BuildCode()
+        {
             var code = new StringBuilder();
             foreach (var item in _refences) code.AppendLine(item);
             foreach (var item in _classes) code.AppendLine(item.ToString());
+            return code.ToString();
+        }
 
-            var codePath =Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location) + "/" + FileName + ".cs";
-            if (File.Exists(codePath)) File.Delete(codePath);
+        private bool IsReCompile(string codePath,string dllPath,string code)
+        {
+            if (!File.Exists(codePath)) return true;
+            if (!File.Exists(dllPath)) return true;
+            if (string.Equals(code, File.ReadAllText(codePath))) return false;
+
+            return true;
+        }
+
+        private void Compile(string codePath,string dllPath,string pdbPath,string code)
+        {
             File.WriteAllText(codePath, code.ToString());
+            if (File.Exists(dllPath)) File.Delete(dllPath);
+            var sysdllDirectory = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            var tree = SyntaxFactory.ParseSyntaxTree(code);
 
-            var dllPath = Path.Combine(Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location),$"{FileName}_dll");
-            if(File.Exists(dllPath))File.Delete(dllPath);
-            var sysdllDirectory=Path.GetDirectoryName( typeof(object).Assembly.Location);
-            var tree = SyntaxFactory.ParseSyntaxTree(code.ToString());
             // A single, immutable invocation to the compiler
             // to produce a library
             var compilation = CSharpCompilation.Create($"{FileName}.dll")
@@ -85,9 +111,13 @@ namespace Atlantis.Common.CodeGeneration
               .AddReferences(MetadataReference.CreateFromFile($"{sysdllDirectory}/netstandard.dll"))
               .AddReferences(MetadataReference.CreateFromFile($"{sysdllDirectory}/System.Threading.Tasks.dll"))
               .AddReferences(MetadataReference.CreateFromFile($"{sysdllDirectory}/System.ComponentModel.dll"));
-            foreach (var item in _assemblyRefenceDLLs) compilation=compilation.AddReferences(MetadataReference.CreateFromFile(item));
+            foreach (var item in _assemblyRefenceDLLs) compilation = compilation.AddReferences(MetadataReference.CreateFromFile(item));
 
-            var compilationResult = compilation.Emit(dllPath);
+#if DEBUG
+            EmitResult compilationResult = compilation.Emit(dllPath, pdbPath);
+#else
+            EmitResult compilationResult = compilation.Emit(dllPath);
+#endif
             if (!compilationResult.Success)
             {
                 var issues = new StringBuilder();
@@ -100,7 +130,6 @@ namespace Atlantis.Common.CodeGeneration
                 }
                 throw new InvalidOperationException(issues.ToString());
             }
-            return new CodeAssembly(Assembly.LoadFile(dllPath));
         }
     }
 }
