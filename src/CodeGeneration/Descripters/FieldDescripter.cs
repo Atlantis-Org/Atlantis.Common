@@ -40,7 +40,7 @@ namespace Atlantis.Common.CodeGeneration.Descripters
         public override string ToString()
         {
             var code = string.IsNullOrWhiteSpace(Code) ? "" : $"={Code}";
-            return $"       {Access.ToAccessCode()} {FieldType.Name} {Name}{code};";  
+            return $"        {Access.ToAccessCode()} {FieldType.Name} {Name}{code};";  
         }
     }
 }

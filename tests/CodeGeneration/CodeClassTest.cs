@@ -13,11 +13,8 @@ namespace Atlantis.Common.Test.CodeGeneration
         [Fact]
         public void New_Class()
         {
-            //CodeBuilder.Instance.CreateClass(
-                
-            // );
-
-            var classes=new ClassDescripter("User")
+            var classes = new ClassDescripter("User")
+                    .SetBaseType(typeof(IUser))
                     .SetAccess(AccessType.Public)
                     .CreateConstructor(
                         new ConstructorDescripter("User")
@@ -26,11 +23,18 @@ namespace Atlantis.Common.Test.CodeGeneration
                     .CreateMember(
                         new MethodDescripter("Hello")
                             .SetAccess(AccessType.Public)
-                            .SetCode("return \"hello\"")
+                            .SetCode("return \"hello\";")
                             .SetReturn(typeof(string))
-                    )
-                    .ToString();
+                    );
+            var assembly=CodeBuilder.Instance.CreateClass(classes)
+                .Build();
+                
         }
+    }
+
+    public interface IUser
+    {
+        string Hello();
     }
 
     public class Person

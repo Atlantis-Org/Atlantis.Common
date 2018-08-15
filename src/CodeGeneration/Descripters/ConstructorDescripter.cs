@@ -6,6 +6,8 @@ namespace Atlantis.Common.CodeGeneration.Descripters
 {
     public class ConstructorDescripter
     {
+        private ClassDescripter _class;
+
         public ConstructorDescripter(string name)
         {
             Name = name;
@@ -48,16 +50,22 @@ namespace Atlantis.Common.CodeGeneration.Descripters
         public override string ToString()
         {
             var strCode = new StringBuilder();
-            strCode.Append($"       {Access.ToAccessCode()} {Name}");
+            strCode.Append($"        {Access.ToAccessCode()} {Name}");
             strCode.AppendLine($"({Parameters.ToParameterCode()})");
             if (!string.IsNullOrWhiteSpace(BaseInheritCode))
             {
-                strCode.AppendLine($"            :base({BaseInheritCode})");
+                strCode.AppendLine($"          :base({BaseInheritCode})");
             }
             strCode.AppendLine("        {");
-            strCode.AppendLine($"           {Code}");
+            strCode.AppendLine($"            {Code}");
             strCode.AppendLine("        }");
             return strCode.ToString();
+        }
+
+        internal ConstructorDescripter SetClassRefence(ClassDescripter classDescripter)
+        {
+            _class = classDescripter;
+            return this;
         }
     }
 }

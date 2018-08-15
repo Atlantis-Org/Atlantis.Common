@@ -78,11 +78,11 @@ namespace Atlantis.Common.CodeGeneration.Descripters
         {
             var strCode = new StringBuilder();
 
-            strCode.Append($"       {Access.ToAccessCode()} ");
+            strCode.Append($"        {Access.ToAccessCode()} ");
             if (IsAsync) strCode.Append("async ");
             strCode.AppendLine($"{ReturnStr} {Name}({Parameters.ToParameterCode()}){TypeParameters.ToTypeParamConstraintCode()}");
             strCode.AppendLine("        {");
-            strCode.AppendLine($"           {Code}");
+            strCode.AppendLine($"            {Code}");
             strCode.AppendLine("        }");
 
             return strCode.ToString();

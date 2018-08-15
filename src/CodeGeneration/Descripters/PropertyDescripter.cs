@@ -39,7 +39,7 @@ namespace Atlantis.Common.CodeGeneration.Descripters
         {
             var get = HasGet ? "get;" : "";
             var set = HasSet ? "set;" : "";
-            return $"       {Access.ToAccessCode()} {Type.Name} {Name}{{{get}{set}}};";
+            return $"        {Access.ToAccessCode()} {Type.Name} {Name}{{{get}{set}}};";
         }
 
     }

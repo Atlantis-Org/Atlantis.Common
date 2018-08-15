@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atlantis.Common", "src\Atla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atlantis.Common.Test", "tests\Atlantis.Common.Test.csproj", "{FC4B70BE-BB47-42D9-8AD9-F96DC23C2D6A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Followme.Atlantis", "..\Atlantis\src\Atlantis\Followme.Atlantis.csproj", "{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,18 +41,6 @@ Global
 		{FC4B70BE-BB47-42D9-8AD9-F96DC23C2D6A}.Release|x64.Build.0 = Release|Any CPU
 		{FC4B70BE-BB47-42D9-8AD9-F96DC23C2D6A}.Release|x86.ActiveCfg = Release|Any CPU
 		{FC4B70BE-BB47-42D9-8AD9-F96DC23C2D6A}.Release|x86.Build.0 = Release|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Debug|x64.Build.0 = Debug|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Debug|x86.Build.0 = Debug|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Release|x64.ActiveCfg = Release|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Release|x64.Build.0 = Release|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Release|x86.ActiveCfg = Release|Any CPU
-		{101EB8D5-F953-4EF6-9A16-63DCF0F8B9CD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

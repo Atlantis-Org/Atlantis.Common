@@ -16,13 +16,14 @@ namespace Atlantis.Common.CodeGeneration.Descripters
             Name = name;
             Namespace = namespaces;
 
-            AddRefence("using System.Linq;");
-            AddRefence("using System;");
-            AddRefence("using System.Collections.Generic;");
-
             Methods = new List<MethodDescripter>();
             Properties = new List<PropertyDescripter>();
             Fields = new List<FieldDescripter>();
+            UsingNamespaces = new List<string>();
+
+            AddUsing("System.Linq");
+            AddUsing("System");
+            AddUsing("System.Collections.Generic");
         }
 
         public string Name { get; private set; }
@@ -41,8 +42,14 @@ namespace Atlantis.Common.CodeGeneration.Descripters
 
         public List<MethodDescripter> Methods { get; private set; }
 
+        public List<string> UsingNamespaces { get; private set; }
+
         public ClassDescripter SetBaseType(params Type[] baseTypes)
         {
+            foreach(var type in baseTypes)
+            {
+                AddUsing(type.Namespace);
+            }
             BaseTypes = baseTypes;
             return this;
         }
@@ -71,9 +78,13 @@ namespace Atlantis.Common.CodeGeneration.Descripters
             return this;
         }
 
-        public ClassDescripter AddRefence(params string[] refences)
+        public ClassDescripter AddUsing(params string[] usingNamespaces)
         {
-            CodeBuilder.Instance.AddRefence(refences);
+            foreach(var item in usingNamespaces)
+            {
+                if (UsingNamespaces.Contains(item)) continue;
+                UsingNamespaces.Add(item);
+            }
             return this;
         }
 
@@ -88,7 +99,15 @@ namespace Atlantis.Common.CodeGeneration.Descripters
             var classStr = new StringBuilder();
             classStr.AppendLine($"namespace {Namespace}");
             classStr.AppendLine("{");
-            classStr.Append($"  {Access.ToAccessCode()} class {Name}");
+            if(UsingNamespaces!=null&&UsingNamespaces.Count>0)
+            {
+                foreach(var item in UsingNamespaces)
+                {
+                    classStr.AppendLine($"    using {item};");
+                }
+            }
+            classStr.AppendLine();
+            classStr.Append($"    {Access.ToAccessCode()} class {Name}");
             if(BaseTypes!=null&&BaseTypes.Length>0)
             {
                 classStr.Append(":");
@@ -99,12 +118,12 @@ namespace Atlantis.Common.CodeGeneration.Descripters
                 classStr = classStr.Remove(classStr.Length - 1, 1);
             }
             classStr.AppendLine();
-            classStr.AppendLine("   {");
+            classStr.AppendLine("    {");
             foreach (var item in Fields) classStr.AppendLine(item.ToString());
             foreach (var item in Constructors) classStr.AppendLine(item.ToString());
             foreach (var item in Properties) classStr.AppendLine(item.ToString());
             foreach (var item in Methods) classStr.AppendLine(item.ToString());
-            classStr.AppendLine("   }");
+            classStr.AppendLine("    }");
             classStr.AppendLine("}");
 
             return classStr.ToString();
