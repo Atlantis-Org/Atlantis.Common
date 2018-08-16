@@ -5,6 +5,7 @@ pipeline:
       - cd src
       - dotnet build
   test:
+    image: microsoft/dotnet:latest
     commands:
       - cd tests
       - dotnet test
