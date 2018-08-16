@@ -126,7 +126,8 @@ namespace Atlantis.Common.CodeGeneration
             //dllFiles.AddRange(Directory.GetFiles(sysdllDirectory, "System.Linq*.dll"));
             //dllFiles.AddRange(Directory.GetFiles(sysdllDirectory, "System.Text*.dll"));
             //dllFiles.AddRange(Directory.GetFiles(sysdllDirectory, "System.Threading*.dll"));
-
+            
+            dllFiles.Add($"{currentDirctory}/Atlantis.Common.dll");
             dllFiles.Add($"{sysdllDirectory}/System.IO.dll");
             dllFiles.Add($"{sysdllDirectory}/netstandard.dll");
             dllFiles.Add($"{sysdllDirectory}/System.Private.CoreLib.dll");
