@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -31,21 +32,22 @@ namespace Atlantis.Common.Test.CodeGeneration
                     .CreateMember(
                         new MethodDescripter("Hello")
                             .SetAccess(AccessType.Public)
-                            .SetCode("return \"hello\";")
-                            .SetReturn(typeof(string))
-                    );
+                            .SetCode("return Task.FromResult(\"hello\");")
+                            .SetReturn("Task<string>")
+                    )
+                    .AddUsing("System.Threading.Tasks");
             var assembly=CodeBuilder.Instance.CreateClass(classes)
                 .Build();
 
             var user = (IUser)assembly.Assembly.CreateInstance("Atlantis.Common.CodeGeneration.User");
-            _output.WriteLine(user.Hello());
+            _output.WriteLine(user.Hello().Result);
                 
         }
     }
 
     public interface IUser
     {
-        string Hello();
+        Task<string> Hello();
     }
 
     public class Person

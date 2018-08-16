@@ -122,6 +122,7 @@ namespace Atlantis.Common.CodeGeneration
             var dllFiles = Directory.GetFiles(sysdllDirectory, "System*.dll").ToList();
             dllFiles.AddRange(Directory.GetFiles(currentDirctory, "*.dll"));
             dllFiles.Add($"{sysdllDirectory}/netstandard.dll");
+            dllFiles.RemoveAll(p => p.Contains("unit"));
 
             foreach (var dllFile in dllFiles)
             {
