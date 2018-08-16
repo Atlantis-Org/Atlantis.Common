@@ -4,3 +4,7 @@ pipeline:
     commands:
       - cd src
       - dotnet build
+  test:
+    commands:
+      - cd tests
+      - dotnet test

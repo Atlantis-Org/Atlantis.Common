@@ -5,13 +5,21 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Atlantis.Common.Test.CodeGeneration
 {
     public class CodeClassTest
     {
+        private readonly ITestOutputHelper _output;
+
+        public CodeClassTest(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
-        public void New_Class()
+        public void Test_New_Simple_Class()
         {
             var classes = new ClassDescripter("User")
                     .SetBaseType(typeof(IUser))
@@ -28,6 +36,9 @@ namespace Atlantis.Common.Test.CodeGeneration
                     );
             var assembly=CodeBuilder.Instance.CreateClass(classes)
                 .Build();
+
+            var user = (IUser)assembly.Assembly.CreateInstance("Atlantis.Common.CodeGeneration.User");
+            _output.WriteLine(user.Hello());
                 
         }
     }
