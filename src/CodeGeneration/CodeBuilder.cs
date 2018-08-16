@@ -118,10 +118,19 @@ namespace Atlantis.Common.CodeGeneration
         {
             var sysdllDirectory = Path.GetDirectoryName(typeof(object).Assembly.Location);
             var currentDirctory= Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            var dllFiles = Directory.GetFiles(sysdllDirectory, "System*.dll").ToList();
-            dllFiles.AddRange(Directory.GetFiles(currentDirctory, "*.dll"));
+            //System.Collections
+            var dllFiles = Directory.GetFiles(currentDirctory, "*.dll").ToList();//Directory.GetFiles(sysdllDirectory, "System*.dll").ToList();
+            dllFiles.AddRange(Directory.GetFiles(sysdllDirectory, "System.Collections*.dll"));
+            dllFiles.AddRange(Directory.GetFiles(sysdllDirectory, "System.Data*.dll")); 
+            dllFiles.AddRange(Directory.GetFiles(sysdllDirectory, "System.Net*.dll"));
+            dllFiles.AddRange(Directory.GetFiles(sysdllDirectory, "System.Linq*.dll"));
+            dllFiles.AddRange(Directory.GetFiles(sysdllDirectory, "System.Text*.dll"));
+            dllFiles.AddRange(Directory.GetFiles(sysdllDirectory, "System.Threading*.dll"));
+            dllFiles.Add($"{sysdllDirectory}/System.IO.dll");
             dllFiles.Add($"{sysdllDirectory}/netstandard.dll");
+            dllFiles.Add($"{sysdllDirectory}/System.Private.CoreLib.dll");
+            dllFiles.Add($"{sysdllDirectory}/System.Runtime.dll");
+            dllFiles.Add($"{sysdllDirectory}/System.ComponentModel.dll");
             dllFiles.RemoveAll(p => p.Contains("unit"));
 
             foreach (var dllFile in dllFiles)
