@@ -93,7 +93,7 @@ namespace Atlantis.Common.CodeGeneration.Descripters
                 if(!string.IsNullOrWhiteSpace(Code))
                     _codeBuilder.Append(Code);
             }
-            _codeBuilder.Append(code);
+            _codeBuilder.AppendLine(code);
             if(!String.IsNullOrWhiteSpace(Code))
                 _code=string.Empty;
             return this;

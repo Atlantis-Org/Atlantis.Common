@@ -113,19 +113,19 @@ namespace Atlantis.Common.CodeGeneration.Descripters
             if(!string.IsNullOrWhiteSpace(_code))return _code;
             
             var classStr = new StringBuilder();
-            classStr.AppendLine($"namespace {Namespace}");
-            classStr.AppendLine("{");
             if(UsingNamespaces!=null&&UsingNamespaces.Count>0)
             {
                 foreach(var item in UsingNamespaces)
                 {
                     if(item.Contains("using "))
-                        classStr.AppendLine($"\t{item}");
+                        classStr.AppendLine($"{item}");
                     else
-                        classStr.AppendLine($"\tusing {item};");
+                        classStr.AppendLine($"using {item};");
                 }
+                classStr.AppendLine();
             }
-            classStr.AppendLine();
+            classStr.AppendLine($"namespace {Namespace}");
+            classStr.AppendLine("{");
             classStr.Append($"    {Access.ToAccessCode()} class {Name}");
             if(BaseTypes!=null&&BaseTypes.Length>0)
             {

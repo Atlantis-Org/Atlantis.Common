@@ -26,8 +26,8 @@ namespace Atlantis.Common.CodeGeneration
 
         static CodeBuilder()
         {
-            DllCachePath=Path.Combine(Path.GetDirectoryName(typeof(CodeBuilder).Assembly.Location),DllCachePath);
-            CodeCachePath=Path.Combine(Path.GetDirectoryName(typeof(CodeBuilder).Assembly.Location),CodeCachePath);
+            DllCachePath=Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),DllCachePath);
+            CodeCachePath=Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),CodeCachePath);
         }
         
         public CodeBuilder(string name,string namespaces=DefaultNamespace)
