@@ -8,6 +8,9 @@ namespace Atlantis.Common.CodeGeneration.Descripters
 {
     public class MethodDescripter
     {
+        private StringBuilder _codeBuilder;
+        private string _code;
+        
         public MethodDescripter(string name, bool isAsync = false)
         {
             Name = name;
@@ -26,7 +29,15 @@ namespace Atlantis.Common.CodeGeneration.Descripters
 
         public ParameterDescripter[] Parameters { get; set; }
 
-        public string Code { get; set; }
+        public string Code
+        {
+            get
+            {
+                if(string.IsNullOrWhiteSpace(_code))
+                    _code=_codeBuilder.ToString();
+                return _code;
+            }
+        }
 
         public bool IsAsync { get; set; }
 
@@ -40,7 +51,7 @@ namespace Atlantis.Common.CodeGeneration.Descripters
 
         public MethodDescripter SetCode(string code)
         {
-            Code = code;
+            _code = code;
             return this;
         }
 
@@ -71,6 +82,20 @@ namespace Atlantis.Common.CodeGeneration.Descripters
         public MethodDescripter SetTypeParameters(params TypeParameterDescripter[] typeParameters)
         {
             TypeParameters = typeParameters;
+            return this;
+        }
+
+        public MethodDescripter AppendCode(string code)
+        {
+            if(_codeBuilder==null)
+            {
+                _codeBuilder=new StringBuilder();
+                if(!string.IsNullOrWhiteSpace(Code))
+                    _codeBuilder.Append(Code);
+            }
+            _codeBuilder.Append(code);
+            if(!String.IsNullOrWhiteSpace(Code))
+                _code=string.Empty;
             return this;
         }
 

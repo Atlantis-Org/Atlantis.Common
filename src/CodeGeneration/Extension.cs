@@ -1,7 +1,5 @@
-﻿using Atlantis.Common.CodeGeneration.Descripters;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
+using Atlantis.Common.CodeGeneration.Descripters;
 
 namespace Atlantis.Common.CodeGeneration
 {
@@ -41,6 +39,18 @@ namespace Atlantis.Common.CodeGeneration
             }
             strCode = strCode.Remove(strCode.Length - 1, 1);
             return strCode.ToString();
+        }
+
+        public static string FindNamespace(this string script)
+        {
+            if(string.IsNullOrWhiteSpace(script))return string.Empty;
+            var arr=script.Split('\n');
+            foreach(var item in arr)
+            {
+                if(!item.Contains("namespace"))continue;
+                return item.Split(' ')[1];
+            }
+            return string.Empty;
         }
     }
 }

@@ -1,17 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using System.Text;
-using Atlantis.Common.Utilities;
 
 namespace Atlantis.Common.CodeGeneration.Descripters
 {
     public class ClassDescripter
     {
+        private readonly string _code;
+        
+        public ClassDescripter(string name,string code,string namespaces=CodeBuilder.DefaultNamespace)
+        {
+            if(string.IsNullOrWhiteSpace(name))throw new ArgumentNullException("The class name is not to be null!");
+            if(string.IsNullOrWhiteSpace(namespaces))throw new ArgumentNullException("The class namespace is not to be null!");
+
+            Name = name;
+            Namespace = namespaces;
+
+            _code=code;
+
+            DecodeCode(code);
+        }
+        
         public ClassDescripter(string name, string namespaces=CodeBuilder.DefaultNamespace)
         {
-            Ensure.NotNullOrWhiteSpace(name, "The class name is not to be null!");
-            Ensure.NotNullOrWhiteSpace(name, "The class namespace is not to be null!");
+            if(string.IsNullOrWhiteSpace(name))throw new ArgumentNullException("The class name is not to be null!");
+            if(string.IsNullOrWhiteSpace(namespaces))throw new ArgumentNullException("The class namespace is not to be null!");
 
             Name = name;
             Namespace = namespaces;
@@ -20,6 +35,7 @@ namespace Atlantis.Common.CodeGeneration.Descripters
             Properties = new List<PropertyDescripter>();
             Fields = new List<FieldDescripter>();
             UsingNamespaces = new List<string>();
+            Constructors=new List<ConstructorDescripter>();
 
             AddUsing("System.Linq");
             AddUsing("System");
@@ -30,10 +46,10 @@ namespace Atlantis.Common.CodeGeneration.Descripters
 
         public string Namespace { get; private set; }
 
-        public Type[] BaseTypes { get; private set; }
+        public string[] BaseTypes { get; private set; }
 
-        public ConstructorDescripter[] Constructors { get; private set; }
-
+        public List<ConstructorDescripter> Constructors { get; private set; }
+        
         public List<FieldDescripter> Fields { get; private set; }
 
         public List<PropertyDescripter> Properties { get; private set; }
@@ -44,19 +60,15 @@ namespace Atlantis.Common.CodeGeneration.Descripters
 
         public List<string> UsingNamespaces { get; private set; }
 
-        public ClassDescripter SetBaseType(params Type[] baseTypes)
+        public ClassDescripter SetBaseType(params string[] baseTypes)
         {
-            foreach(var type in baseTypes)
-            {
-                AddUsing(type.Namespace);
-            }
             BaseTypes = baseTypes;
             return this;
         }
 
         public ClassDescripter CreateConstructor(params ConstructorDescripter[] constructors)
         {
-            Constructors = constructors;
+            Constructors.AddRange(constructors);
             return this;
         }
 
@@ -80,6 +92,8 @@ namespace Atlantis.Common.CodeGeneration.Descripters
 
         public ClassDescripter AddUsing(params string[] usingNamespaces)
         {
+            if(UsingNamespaces==null)
+                UsingNamespaces=new List<string>();
             foreach(var item in usingNamespaces)
             {
                 if (UsingNamespaces.Contains(item)) continue;
@@ -96,6 +110,8 @@ namespace Atlantis.Common.CodeGeneration.Descripters
 
         public override string ToString()
         {
+            if(!string.IsNullOrWhiteSpace(_code))return _code;
+            
             var classStr = new StringBuilder();
             classStr.AppendLine($"namespace {Namespace}");
             classStr.AppendLine("{");
@@ -103,7 +119,10 @@ namespace Atlantis.Common.CodeGeneration.Descripters
             {
                 foreach(var item in UsingNamespaces)
                 {
-                    classStr.AppendLine($"    using {item};");
+                    if(item.Contains("using "))
+                        classStr.AppendLine($"\t{item}");
+                    else
+                        classStr.AppendLine($"\tusing {item};");
                 }
             }
             classStr.AppendLine();
@@ -113,7 +132,7 @@ namespace Atlantis.Common.CodeGeneration.Descripters
                 classStr.Append(":");
                 foreach(var baseType in BaseTypes)
                 {
-                    classStr.Append($"{baseType.Name},");
+                    classStr.Append($"{baseType},");
                 }
                 classStr = classStr.Remove(classStr.Length - 1, 1);
             }
@@ -127,6 +146,35 @@ namespace Atlantis.Common.CodeGeneration.Descripters
             classStr.AppendLine("}");
 
             return classStr.ToString();
+        }
+
+        private void DecodeCode(string code)
+        {
+            var nameIsDecoded=false;
+            foreach(var item in code.Split('\n'))
+            {
+                if(item.Contains("namespace "))
+                {
+                    Namespace=item.Replace("namespace","")
+                        .Replace("}","")
+                        .Trim();
+                }
+                if(!nameIsDecoded&&item.Contains(" class "))
+                {
+                    var strArr=item.Split(':');
+                    Name= Regex.Split(strArr[0], " class ")[1].Trim();
+                    if(strArr.Length>1)
+                    {
+                        strArr=Regex.Split(strArr[1], "where")[0].Trim().Split(',');
+                        BaseTypes=strArr;
+                    }
+                    nameIsDecoded=true;
+                }
+                if(item.Contains("using "))
+                {
+                    AddUsing(item);
+                }
+            }
         }
     }
 
