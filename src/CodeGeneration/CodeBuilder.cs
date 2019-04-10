@@ -20,14 +20,14 @@ namespace Atlantis.Common.CodeGeneration
         private string _name;
         private string _namespace;
         
-        public const string DefaultNamespace = "TCM.Hebe.Report.Spider.Scripts";
+        public const string DefaultNamespace = "Atlantis.Common.CodeGeneration";
         public static readonly string DllCachePath=".builder-cache/dlls/";
         public static readonly string CodeCachePath=".builder-cache/codes";
 
         static CodeBuilder()
         {
-            DllCachePath=Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),DllCachePath);
-            CodeCachePath=Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),CodeCachePath);
+            DllCachePath=Path.Combine(Environment.CurrentDirectory,DllCachePath);
+            CodeCachePath=Path.Combine(Environment.CurrentDirectory,CodeCachePath);
         }
         
         public CodeBuilder(string name,string namespaces=DefaultNamespace)
@@ -93,8 +93,8 @@ namespace Atlantis.Common.CodeGeneration
         public Task<CodeAssembly> BuildAsync()
         {
             // var strCode = BuildCode();
-            var dllPath = Path.Combine(Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location),$"{_name}_dll");
-            var pdbPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"{_name}.pdb");
+            var dllPath = Path.Combine(Environment.CurrentDirectory,$"{_name}_dll");
+            var pdbPath = Path.Combine(Environment.CurrentDirectory, $"{_name}.pdb");
 
             // if (IsReCompile(codePath, dllPath, strCode))
             // {
